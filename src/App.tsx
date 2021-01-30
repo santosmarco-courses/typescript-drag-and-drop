@@ -1,26 +1,30 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import * as React from "react";
+import Container from "react-bootstrap/Container";
+import Row from "react-bootstrap/Row";
+import { useSelector } from "react-redux";
+import AppSection from "./components/AppSection";
+import CreateProjectForm from "./components/CreateProjectForm";
+import { ProjectsState } from "./store/reducers/types";
+import { RootState } from "./store/types";
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+const App = () => {
+  const allProjects = useSelector<RootState, ProjectsState>(
+    (state) => state.projects
   );
-}
+  const activeProjects = allProjects.filter((p) => p.status === "active");
+  const finishedProjects = allProjects.filter((p) => p.status === "finished");
+
+  return (
+    <Container fluid className="p-0">
+      <Row noGutters>
+        <AppSection title="Create">
+          <CreateProjectForm />
+        </AppSection>
+        <AppSection title="Active" projects={activeProjects} />
+        <AppSection title="Finished" projects={finishedProjects} />
+      </Row>
+    </Container>
+  );
+};
 
 export default App;
